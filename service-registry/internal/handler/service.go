@@ -23,10 +23,12 @@ func (h *Handler) GetServiceByName(w http.ResponseWriter, r *http.Request) {
 
 	instances := h.store.Get(name)
 
-	serviceName := instances[0].Name
-	defaultAddress := instances[0].Address
+	if len(instances) == 0 {
+		h.writeJSON(w, http.StatusOK, []ServiceInstanceResponse{})
+		return
+	}
 
-	resp := make([]ServiceInstanceResponse, 0)
+	resp := make([]ServiceInstanceResponse, 0, len(instances))
 	for _, inst := range instances {
 		resp = append(resp, ServiceInstanceResponse{
 			ID:            inst.ID,
@@ -34,16 +36,6 @@ func (h *Handler) GetServiceByName(w http.ResponseWriter, r *http.Request) {
 			LastHeartbeat: inst.LastHeartbeat,
 			Name:          inst.Name,
 			Status:        inst.Status,
-		})
-	}
-
-	if len(resp) == 0 {
-		resp = append(resp, ServiceInstanceResponse{
-			ID:            instances[0].ID,
-			Address:       defaultAddress,
-			LastHeartbeat: instances[0].LastHeartbeat,
-			Name:          serviceName,
-			Status:        instances[0].Status,
 		})
 	}
 
