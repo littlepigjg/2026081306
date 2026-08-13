@@ -2,5 +2,9 @@ node_modules/
 __pycache__/
 *.pyc
 .env
-empty.bat 
-empty.bat 
+empty.bat
+empty.bat
+service-registry/server.exe
+service-registry/registry_dump.json
+service-registry/*.exe
+service-registry/*.exe~ 
